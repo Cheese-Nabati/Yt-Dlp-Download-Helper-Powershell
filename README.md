@@ -9,7 +9,7 @@ pre-requisite :
 1. Download the Script
 2. Run the ytdlp-interact-host.ps1
 
-- Planned -
+*Plan*
 - Change PowerShell > BatchFiles
 - Add Playlist Download Feature
 - Add SponsorBlock Options
