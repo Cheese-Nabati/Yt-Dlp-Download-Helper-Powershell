@@ -1,4 +1,5 @@
-*Make Downloading Video/Audio With Yt-Dlp Easier With VLC*
+*Make Downloading Video/Audio With Yt-Dlp Easier*
+*With PowerShell Script*
 
 pre-requisite :
 1. Yt-Dlp 
