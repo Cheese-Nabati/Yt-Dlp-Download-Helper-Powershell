@@ -5,7 +5,7 @@ A lightweight, interactive PowerShell wrapper for `yt-dlp` that simplifies video
 ## ✨ Features
 - **Smart URL Detection:** Automatically detects YouTube links to provide advanced resolution options (720p to 4K).
 - **Audio/Video Toggle:** Easily switch between MP3 conversion or high-quality MP4 video.
-- **Dependency Check:** Automatically prompts to install `yt-dlp` and `ffmpeg` if they are missing.
+~~- **Dependency Check:** Automatically prompts to install `yt-dlp` and `ffmpeg` if they are missing.~~
 - **SponsorBlock Integration:** (Planned) Option to skip sponsor segments automatically.
 - **Playlist Support:** (Planned) Download entire collections with one link.
 
