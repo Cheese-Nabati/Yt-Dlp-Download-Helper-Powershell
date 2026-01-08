@@ -23,7 +23,10 @@ A lightweight, interactive PowerShell wrapper for `yt-dlp` that simplifies video
 
 🏗️ Roadmap
 
-    [ ] Move logic to BatchFiles
-    [ ] Implement Playlist download toggle
-    [ ] Integrate SponsorBlock (--sponsorblock-remove all)
-    [ ] irm Support
+  -  Move logic to BatchFiles
+  - Implement Playlist download toggle
+  - Integrate SponsorBlock (--sponsorblock-remove all)
+  - irm (Invoke-RestMethod) Support
+
+## 📝 Note
+This is a casual project to fill my time. So, I'm Sorry if is a Bad Code found on my Code
