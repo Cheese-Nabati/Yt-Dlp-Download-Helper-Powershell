@@ -21,8 +21,7 @@ A lightweight, interactive PowerShell wrapper for `yt-dlp` that simplifies video
    ```powershell
    ./ytdlp-interact-host.ps1
 
-🏗️ Roadmap
-
+## 🏗️ Roadmap
   -  Move logic to BatchFiles
   - Implement Playlist download toggle
   - Integrate SponsorBlock (--sponsorblock-remove all)
