@@ -1,4 +1,8 @@
-﻿#Fetch URL Information
+
+#Warning - Video  Function Not Work Properly - May Have Fix this ASAP
+
+
+ #Fetch URL Information
 $info = & $global:ytDlpPath --quiet --print "title,uploader,extractor_key" $global:url 2>$null
 if ($info) {
     $vTitle    = $info[0]
@@ -223,3 +227,4 @@ pause; exit
 # VJonJmTW9z65iIbwZ65vVPS6COTl7/rcsSNUs03VTYuyC11BZ7piRyxV6PzEut0i
 # ANMKNQ1VwoD9Ax91KhUY7otJSCWSN5XE
 # SIG # End signature block
+
