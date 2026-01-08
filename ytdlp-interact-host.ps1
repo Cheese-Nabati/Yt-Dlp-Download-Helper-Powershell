@@ -4,13 +4,16 @@ if (-not $args) {
     Write-Host ''
     Write-Host " YT-DLP Download Helper On ps1/PowerShell) "
     Write-Host " Beta Version - May Have Change/Add Features " -ForegroundColor Yellow
+    Write-Host " Version : Beta 0.1.2 " -ForegroundColor Cyan
+    Write-Host " By : CheeseNabati "
     Write-Host ''
     Write-Host '============================================='
 }
 
 #Value Check for Yt-DLP & ffmpeg
 Write-Host "Searching PATH for yt-dlp and ffmpeg..." -ForegroundColor Cyan
-$ytDlpPath = Get-Command "ytdlp" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
+$ytDlpPath = Get-Command "yt-dlp" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
+$yDlpPath = Get-Command "yt-dlp" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
 $ffmpegPath = Get-Command "ffmpeg" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
 $denoPath = Get-Command "deno" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
 
@@ -73,9 +76,9 @@ if (-not (Test-Path $saveDir)) {
     }
 
 Write-Host "Select The Format You Downloaded:" -ForegroundColor Cyan
-Write-Host "[1] MP4 (Video) (Function Not Correctly)" -ForegroundColor Cyan
+Write-Host "[1] MP4 (Video)" -ForegroundColor Cyan
 Write-Host "[2] MP3 (Audio)" -ForegroundColor Cyan
-$choice = Read-Host "Choice"
+$choice = Read-Host "Select Format"
 
 $params = @($url, "-P", $saveDir, "--no-mtime")
 
@@ -245,4 +248,3 @@ if ($choice -eq "1") {
 # Vg5Iie5+aS/2WWLJI5Um7SmL+lvLzuoVPypvvRxbJ5lAXZg54K36TQJSQuwncibZ
 # Kyk6Ap2+qn1GgkMepSw5TVRyFXATr5D1
 # SIG # End signature block
-

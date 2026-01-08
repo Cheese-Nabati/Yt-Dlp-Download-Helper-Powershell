@@ -1,4 +1,4 @@
-
+﻿
 #Warning - Video  Function Not Work Properly - May Have Fix this ASAP
 
 
@@ -21,60 +21,51 @@ Write-Host "=====================================================" -ForegroundCo
 Start-Sleep -Seconds 1
 
 #User Interactions 
+$isYouTube = $false
+if ($global:url -like "*youtube.com*" -or $global:url -like "*youtu.be*" -or $global:url -like "*music.youtube.com*") {
+    $isYouTube = $true
+}
+# --- 1. SET THE VALUE ---
+$isYouTube = ($global:url -like "*youtube.com*" -or $global:url -like "*youtu.be*")
+
+# --- 2. BRANCH THE MENU ---
 if ($isYouTube) {
-Write-Host "`nSelect Video Quality:" -ForegroundColor Yellow
-Write-Host "[1] Best/High (1080p-1440p-4K)"
-Write-Host "[2] Medium (720p)"
-Write-Host "[3] Low (480p)"
-Write-Host "[4] Advanced Resolution"
-$vQuality = Read-Host "Select The Quality"
-}
-if ($vSelection -eq "3") {
-    if ($isYouTube) {
-        Show-AdvancedResolutionMenu
-    } else {
-        Write-Host "[!] Advanced Resolution is only available for YouTube links." -ForegroundColor Red
-        Start-Sleep -Seconds 2
-    }
-}
-if ($vQuality -eq "4") { 
-Clear-Host
-  Write-Host "Select the Resolution "
-  Write-Host "[1] 480p "
-  Write-Host "[2] 720p (HD)"
-  Write-Host "[3] 1080p (Full HD)"
-  Write-Host "[4] 1440p (2K)"
-  Write-Host "[5] 2160p (4K)"
-  Write-Host "[R] Back to Main Menu" 
-    $resChoice = Read-Host "`nSelect Resolution"
+    # BYPASS to specific Resolution Selections
+    Clear-Host
+    Write-Host "Select Resolution" -ForegroundColor Cyan
+    Write-Host "===================================="
+    Write-Host "[1] 480p"
+    Write-Host "[2] 720p (HD)"
+    Write-Host "[3] 1080p (Full HD)"
+    Write-Host "[4] 1440p (2K)"
+    Write-Host "[5] 2160p (4K)"
+    Write-Host "[B] Best Available"
+    
+    $resChoice = (Read-Host "`nSelect Resolution").Trim()
+
     switch ($resChoice) {
         "1" { $resHeight = "480" }
         "2" { $resHeight = "720" }
         "3" { $resHeight = "1080" }
         "4" { $resHeight = "1440" }
         "5" { $resHeight = "2160" }
-        "R" { return }
-        }
-    $params += @("-f", "bestvideo[height<=$resHeight]+bestaudio/best[height<=$resHeight]")
+        "B" { $resHeight = "9999" } # Effectively 'Best'
+        Default { $resHeight = "1080" }
     }
-        Default { $params += @("-f", "bestvideo+bestaudio/best") 
-   }
-        
+    
+    Write-Host "--- Download Started ---" -ForegroundColor Green
+    $params += @("-f", "bestvideo[height<=$resHeight]+bestaudio/best[height<=$resHeight]")
 
-switch ($vQuality) {
-    "1" { $params += @("-f", "bestvideo+bestaudio/best") }
-    "2" { $params += @("-f", "bestvideo[height<=720]+bestaudio/best") }
-    "3" { $params += @("-f", "bestvideo[height<=480]+bestaudio/best") }
-    Default { $params += @("-f", "bestvideo+bestaudio/best") }
+} else {
+    Write-Host "External Platform Detected. Fetching best quality..." -ForegroundColor Gray
+    $params += @("-f", "bestvideo+bestaudio/best")
 }
 
-Write-Host "`n--- Downloading Video ---" -ForegroundColor Green
 $params += @("--merge-output-format", "mp4")
-& $ytDlpPath $params
-$script:readyToDownload = $true
-Write-Host "`n--- Download Finished ---" -ForegroundColor Green
-pause; exit
-
+$params += $global:url
+& $global:ytDlpPath $params
+Write-Host "--- Finished Download ---" -ForegroundColor Green
+pause exit
 
 # SIG # Begin signature block
 # MIIb1AYJKoZIhvcNAQcCoIIbxTCCG8ECAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
@@ -227,4 +218,3 @@ pause; exit
 # VJonJmTW9z65iIbwZ65vVPS6COTl7/rcsSNUs03VTYuyC11BZ7piRyxV6PzEut0i
 # ANMKNQ1VwoD9Ax91KhUY7otJSCWSN5XE
 # SIG # End signature block
-
