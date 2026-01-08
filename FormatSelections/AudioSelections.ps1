@@ -1,4 +1,23 @@
-﻿Write-Host "`nSelect Audio Quality:" -ForegroundColor Yellow
+﻿#Fetch URL Information
+$info = & $global:ytDlpPath --quiet --print "title,uploader,extractor_key" $global:url 2>$null
+if ($info) {
+    $vTitle    = $info[0]
+    $vUploader = $info[1] -replace " - Topic", ""
+    $vPlatform = $info[2]
+}
+    
+Clear-Host
+Write-Host "URL Information"
+Write-Host "=====================================================" -ForegroundColor Cyan
+Write-Host " PLATFORM : $vPlatform " -BackgroundColor cyan
+Write-Host " TITLE    : $vTitle "
+Write-Host " UPLOADER : $vUploader " 
+Write-Host "=====================================================" -ForegroundColor Cyan
+
+Start-Sleep -Seconds 1
+
+#User Interactions - Audio
+Write-Host "`nSelect Audio Quality:" -ForegroundColor Yellow
 Write-Host "[1] High (320kbps)"
 Write-Host "[2] Standart (192kbps)"
 Write-Host "[3] Low (128kbps)"
@@ -7,6 +26,7 @@ $vQuality = Read-Host "Select The Quality"
 
 if ($vQuality -eq "4") { . pause }
 
+#Command Parameter
 switch ($vQuality) {
     "1" { $params += @("-x", "--audio-format", "mp3", "--audio-quality", "320k") }
     "2" { $params += @("-x", "--audio-format", "mp3", "--audio-quality", "192k") }
@@ -15,14 +35,20 @@ switch ($vQuality) {
 }
 
 $params += @("--ppa", "ExtractAudio: -metadata title='%(title)s' -metadata artist='%(uploader)s'")
-$params += @("--embed-metadata", "--embed-thumbnail")
+$params += @("--embed-metadata", "--embed-thumbnail", "--convert-thumbnails", "jpg")
 $params += "--windows-filenames"
+if ($global:url -like "*music.youtube.com*") {
+$params += @("--ppa", "ThumbnailsConvertor: -vf scale=720:720:force_original_aspect_ratio=increase,crop=720:720")
+}
 
+#Processing to yt-dlp & ffmpeg
 Write-Host "`n--- Starting Audio Download ---" -ForegroundColor Green
 & $ytDlpPath $params
 $script:readyToDownload = $true
-Write-Host "`n--- Download Finised ---"
+Write-Host "`n--- Download Finised ---" -ForegroundColor Green
+pause; exit
 
+#Signature Block Area
 
 # SIG # Begin signature block
 # MIIb1AYJKoZIhvcNAQcCoIIbxTCCG8ECAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB

@@ -1,10 +1,61 @@
-﻿Write-Host "`nSelect Video Quality:" -ForegroundColor Yellow
-Write-Host "[1] Best Quality"
+﻿#Fetch URL Information
+$info = & $global:ytDlpPath --quiet --print "title,uploader,extractor_key" $global:url 2>$null
+if ($info) {
+    $vTitle    = $info[0]
+    $vUploader = $info[1]
+    $vPlatform = $info[2]
+}
+    
+Clear-Host
+Write-Host "URL Information"
+Write-Host "=====================================================" -ForegroundColor Cyan
+Write-Host " PLATFORM : $vPlatform " -BackgroundColor DarkGray
+Write-Host " TITLE    : $vTitle " 
+Write-Host " UPLOADER : $vUploader " 
+Write-Host "=====================================================" -ForegroundColor Cyan
+
+Start-Sleep -Seconds 1
+
+#User Interactions 
+if ($isYouTube) {
+Write-Host "`nSelect Video Quality:" -ForegroundColor Yellow
+Write-Host "[1] Best/High (1080p-1440p-4K)"
 Write-Host "[2] Medium (720p)"
 Write-Host "[3] Low (480p)"
+Write-Host "[4] Advanced Resolution"
 $vQuality = Read-Host "Select The Quality"
-
-if ($vQuality -eq "4") { . pause }
+}
+if ($vSelection -eq "3") {
+    if ($isYouTube) {
+        Show-AdvancedResolutionMenu
+    } else {
+        Write-Host "[!] Advanced Resolution is only available for YouTube links." -ForegroundColor Red
+        Start-Sleep -Seconds 2
+    }
+}
+if ($vQuality -eq "4") { 
+Clear-Host
+  Write-Host "Select the Resolution "
+  Write-Host "[1] 480p "
+  Write-Host "[2] 720p (HD)"
+  Write-Host "[3] 1080p (Full HD)"
+  Write-Host "[4] 1440p (2K)"
+  Write-Host "[5] 2160p (4K)"
+  Write-Host "[R] Back to Main Menu" 
+    $resChoice = Read-Host "`nSelect Resolution"
+    switch ($resChoice) {
+        "1" { $resHeight = "480" }
+        "2" { $resHeight = "720" }
+        "3" { $resHeight = "1080" }
+        "4" { $resHeight = "1440" }
+        "5" { $resHeight = "2160" }
+        "R" { return }
+        }
+    $params += @("-f", "bestvideo[height<=$resHeight]+bestaudio/best[height<=$resHeight]")
+    }
+        Default { $params += @("-f", "bestvideo+bestaudio/best") 
+   }
+        
 
 switch ($vQuality) {
     "1" { $params += @("-f", "bestvideo+bestaudio/best") }
@@ -17,7 +68,8 @@ Write-Host "`n--- Downloading Video ---" -ForegroundColor Green
 $params += @("--merge-output-format", "mp4")
 & $ytDlpPath $params
 $script:readyToDownload = $true
-Write-Host "`n--- Download Finished ---"
+Write-Host "`n--- Download Finished ---" -ForegroundColor Green
+pause; exit
 
 
 # SIG # Begin signature block

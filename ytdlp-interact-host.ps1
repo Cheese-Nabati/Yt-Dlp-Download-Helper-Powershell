@@ -1,43 +1,45 @@
-
 #Header
 if (-not $args) {
+    Write-Host '============================================='
     Write-Host ''
-    Write-Host 'YT-DLP Download Helper (ps1/PowerShell) ' -NoNewline
-    Write-Host 'Beta Version - May Have Change/Add Features' -ForegroundColor Yellow
+    Write-Host " YT-DLP Download Helper On ps1/PowerShell) "
+    Write-Host " Beta Version - May Have Change/Add Features " -ForegroundColor Yellow
     Write-Host ''
+    Write-Host '============================================='
 }
 
-#Value Check for Yt-DLP & ffmpegs
+#Value Check for Yt-DLP & ffmpeg
 Write-Host "Searching PATH for yt-dlp and ffmpeg..." -ForegroundColor Cyan
-$ytDlpPath = Get-Command "yt-dlp" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
+$ytDlpPath = Get-Command "ytdlp" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
 $ffmpegPath = Get-Command "ffmpeg" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
+$denoPath = Get-Command "deno" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
 
 if ($ytDlpPath) {
     Write-Host "Found Yt-DLP" -ForegroundColor Green
 }
 if (-not $ytDlpPath) {
-    Write-Host "ERROR: 'yt-dlp' not found in your System PATH." -ForegroundColor Red
+    Write-Host "ERROR: 'yt-dlp' not found in your System PATH" -ForegroundColor Red
     Write-Host "Please add yt-dlp path to your Environment Variables." -ForegroundColor Yellow
     pause; exit
 }
 if ($ffmpegPath) {
 Write-Host "Found ffmpeg" -ForegroundColor Green 
 }
-
-if (-not $ffmpegPath) {
+if (-not $ffmpegPath){
     Write-Host "WARNING: 'ffmpeg' not found in your System PATH." -ForegroundColor Red
     Write-Host "Audio conversion and video merging will fail/not function correctly." -ForegroundColor Yellow
-}
+    }
 
 if ($denoPath) {
 Write-Host "Found DenoJS" -ForegroundColor Green
 }
 
-
 if (-not $denoPath) {
     Write-Host "Notice: 'DenoJS' not found in your System PATH." -ForegroundColor Yellow
     Write-Host "YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See https://github.com/yt-dlp/yt-dlp/wiki/EJS " -ForegroundColor Yellow
 }
+
+
 
 #User Interactions - URL, Path & Format Selections
 $rawurl = Read-Host "`nEnter The URL"
