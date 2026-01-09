@@ -1,4 +1,4 @@
-﻿﻿#Fetch URL Information
+﻿ #Fetch URL Information
 $info = & $global:ytDlpPath --quiet --print "title,uploader,extractor_key" $global:url 2>$null
 if ($info) {
     $vTitle    = $info[0]

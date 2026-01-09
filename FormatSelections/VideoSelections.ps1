@@ -1,36 +1,33 @@
-﻿
-#Warning - Video  Function Not Work Properly - May Have Fix this ASAP
+﻿# URL Metadata Detection
+$vTitle = "Unknown"; $vUploader = "Unknown"; $vPlatform = "Unknown"
+$info = & $global:ytDlpPath --quiet --no-warnings --flat-playlist --print "%(playlist_title,title)s" --print "%(uploader,channel)s" --print "extractor_key" $global:url 2>$null
 
-
- #Fetch URL Information
-$info = & $global:ytDlpPath --quiet --print "title,uploader,extractor_key" $global:url 2>$null
 if ($info) {
+    $isPlaylist = $global:url -like "*list=*"
+    
     $vTitle    = $info[0]
     $vUploader = $info[1]
     $vPlatform = $info[2]
 }
-    
 Clear-Host
-Write-Host "URL Information"
-Write-Host "=====================================================" -ForegroundColor Cyan
-Write-Host " PLATFORM : $vPlatform " -BackgroundColor DarkGray
+$headerText = if ($isPlaylist) { "PLAYLIST DETECTED" } else { "URL INFORMATION" }
+$headerColor = if ($isPlaylist) { "Yellow" } else { "Cyan" }
+Write-Host $headerText -ForegroundColor $headerColor
+Write-Host "=====================================================" -ForegroundColor $headerColor
+Write-Host " PLATFORM : $vPlatform "
 Write-Host " TITLE    : $vTitle " 
 Write-Host " UPLOADER : $vUploader " 
-Write-Host "=====================================================" -ForegroundColor Cyan
+Write-Host "=====================================================" -ForegroundColor $headerColor
+Start-Sleep -Seconds 5
 
-Start-Sleep -Seconds 1
-
-#User Interactions 
+ #User Interactions 
 $isYouTube = $false
 if ($global:url -like "*youtube.com*" -or $global:url -like "*youtu.be*" -or $global:url -like "*music.youtube.com*") {
     $isYouTube = $true
 }
-# --- 1. SET THE VALUE ---
-$isYouTube = ($global:url -like "*youtube.com*" -or $global:url -like "*youtu.be*")
 
-# --- 2. BRANCH THE MENU ---
+$isYouTube = ($global:url -like "*youtube.com*" -or $global:url -like "*youtu.be*")
 if ($isYouTube) {
-    # BYPASS to specific Resolution Selections
     Clear-Host
     Write-Host "Select Resolution" -ForegroundColor Cyan
     Write-Host "===================================="
@@ -61,6 +58,26 @@ if ($isYouTube) {
     $params += @("-f", "bestvideo+bestaudio/best")
 }
 
+ #Download Processing
+$isPlaylist = $global:url -like "*list=*"
+if ($isPlaylist) {
+    Write-Host "[!] Playlist detected in URL" -ForegroundColor Cyan
+    $params += @("-o", "%(playlist_title)s/%(playlist_index)02d - %(title)s.%(ext)s")
+    $params += "--yes-playlist"
+} else {
+    $params += @("-o", "%(title)s.%(ext)s")
+    $params += "--no-playlist"
+}
+$isPlaylist = $global:url -like "*list=*"
+if ($isPlaylist) {
+	Write-Host "--- Start Download ---" -ForegroundColor Green
+    $params += @("-o", "%(playlist_title)s/%(playlist_index)02d - %(title)s.%(ext)s")
+    $params += "--yes-playlist"
+} else {
+	Write-Host "--- Start Download ---" -ForegroundColor Green
+    $params += @("-o", "%(title)s.%(ext)s")
+    $params += "--no-playlist"
+}
 $params += @("--merge-output-format", "mp4")
 $params += $global:url
 & $global:ytDlpPath $params
